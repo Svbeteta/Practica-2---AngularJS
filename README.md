@@ -79,8 +79,8 @@ http://localhost:4200
 bash
 Copy code
 ng serve --host 0.0.0.0
-🧠 Usage
-🔹 Creating an Order
+Usage
+Creating an Order
 Go to the “Create” tab.
 
 Fill in all required fields:
@@ -96,7 +96,7 @@ Description – Between 40 and 120 characters
 Click Create Order to register it.
 A confirmation modal will appear with the generated package number and identifier.
 
-🔹 Updating an Order
+Updating an Order
 Go to the “Update” tab.
 
 Enter the Package Number and click Search.
@@ -108,27 +108,22 @@ Add a comment (20–40 chars) and responsible person’s name.
 Click Save Update to confirm.
 A modal will confirm the successful update.
 
-🧪 Validation Rules Summary
-Field	Validation	Example
-Name	Only letters and spaces	Juan Pérez
-Address	Required	Calle 10-45, Zona 12
-Email	Must be Gmail or Outlook	usuario@gmail.com
-Description	40–120 characters	Contains fragile glass items.
-Comment (update)	20–40 characters	Package prepared for delivery
+Validation Rules Summary
+- Field	Validation	Example
+- Name	Only letters and spaces	Juan Pérez
+- Address	Required	Calle 10-45, Zona 12
+- Email	Must be Gmail or Outlook	usuario@gmail.com
+- Description	40–120 characters	Contains fragile glass items.
+- Comment (update) 20–40 characters	Package prepared for delivery
 
-🖼️ Screenshots
+Screenshots
 Create Order
 
 Update Order
 
-💡 Notes
+Notes
 This app simulates data storage only in the client (no backend).
 
 Designed for educational purposes under Programming Web – Practice #2 (2025).
 
 All UI elements use Bootstrap 5 for layout and feedback.
-
-👨‍💻 Author
-Samuel Beteta
-Universidad Mesoamericana – Systems Engineering
-
