@@ -1,0 +1,83 @@
+<div class="card shadow-sm mb-4">
+  <div class="card-header bg-primary text-white">Seguimiento por identificador</div>
+  <div class="card-body">
+    <form [formGroup]="form" (ngSubmit)="onSearch()" class="row g-2" novalidate>
+      <div class="col-md-8">
+        <input type="text"
+               class="form-control"
+               formControlName="identifier"
+               placeholder="ABCDEFGHIJKL (12 letras)"
+               maxlength="12"
+               autocapitalize="characters" />
+        <div class="form-text">Ingresa el identificador de 12 letras en mayúsculas.</div>
+      </div>
+      <div class="col-md-4 d-grid">
+        <button class="btn btn-primary" type="submit">Buscar</button>
+      </div>
+    </form>
+    <div class="text-danger mt-2" *ngIf="errorMsg">{{ errorMsg }}</div>
+  </div>
+</div>
+
+<div *ngIf="found" class="card shadow-sm">
+  <div class="card-header bg-light">
+    <strong>Número de paquete:</strong> {{ found.packageNumber }}
+    &nbsp;•&nbsp;
+    <strong>Identificador:</strong> {{ found.identifier }}
+  </div>
+
+  <div class="card-body">
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <div class="form-text">Nombre del destinatario</div>
+        <div class="fw-semibold">{{ found.nombre }}</div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-text">Dirección de destino</div>
+        <div class="fw-semibold">{{ found.direccion }}</div>
+      </div>
+    </div>
+
+    <!-- Vista móvil: tarjetas -->
+    <div class="d-md-none">
+      <div *ngFor="let h of historyAsc" class="card mb-2">
+        <div class="card-body p-3">
+          <div class="d-flex justify-content-between">
+            <span class="badge text-bg-secondary">{{ h.estado }}</span>
+            <small class="text-muted">{{ h.fecha | date:'dd/MM/yyyy, HH:mm' }}</small>
+          </div>
+          <div class="mt-2">{{ h.comentario }}</div>
+          <div class="text-muted mt-1">Resp.: {{ h.responsable }}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vista desktop: tabla -->
+    <div class="table-responsive d-none d-md-block">
+      <table class="table table-sm align-middle">
+        <thead>
+          <tr>
+            <th style="width: 180px;">Fecha</th>
+            <th style="width: 140px;">Estado</th>
+            <th>Comentario</th>
+            <th style="width: 220px;">Responsable</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let h of historyAsc">
+            <td><span class="text-nowrap">{{ h.fecha | date:'dd/MM/yyyy, HH:mm' }}</span></td>
+            <td><span class="badge text-bg-secondary">{{ h.estado }}</span></td>
+            <td>{{ h.comentario }}</td>
+            <td>{{ h.responsable }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<!-- Estado vacío -->
+<div *ngIf="!found && !errorMsg" class="text-center text-muted">
+  Ingresa un identificador y presiona <strong>Buscar</strong>.
+</div>

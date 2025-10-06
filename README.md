@@ -1,59 +1,134 @@
-# Practica2AngularJS
+# 📦 Package Tracking System (Angular Practice #2)
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.3.
+This project is a **package tracking management system** built with **Angular 20 (standalone components)**.  
+It allows users to **create**, **update**, and **follow** package orders with a simple and responsive interface.  
+Developed as part of *Programming Web – Practice #2 (2025)*.
 
-## Development server
+---
 
-To start a local development server, run:
+## 🚀 Features
 
-```bash
+- **Create Order** – Register new delivery orders with validations (only Gmail/Outlook domains, letter-only names, description length, etc.).
+- **Update Order** – Search for existing orders, change their status, and add responsible staff comments.
+- **Bootstrap UI** – Clean and modern interface using Bootstrap modals, alerts, and responsive cards.
+- **Form Validation** – Dynamic validation feedback and smart disabling of buttons until all requirements are met.
+- **Local Order Management** – Orders are stored in memory via `OrdersService`, simulating a backend.
+
+---
+
+## 🧩 Technologies Used
+
+- **Angular 20+ (standalone components)**
+- **TypeScript**
+- **Bootstrap 5**
+- **Reactive Forms**
+- **RxJS**
+- **HTML5 / SCSS**
+
+---
+
+## 📁 Project Structure
+
+src/
+├── app/
+│ ├── app.config.ts
+│ ├── app.routes.ts
+│ ├── core/
+│ │ └── orders.service.ts # Service to manage orders
+│ ├── componentes/
+│ │ ├── crear/ # Create order
+│ │ │ ├── crear.ts
+│ │ │ ├── crear.html
+│ │ │ └── crear.scss
+│ │ ├── actualizar/ # Update order
+│ │ │ ├── actualizar.ts
+│ │ │ ├── actualizar.html
+│ │ │ └── actualizar.scss
+│ │ └── seguimiento/ # Tracking module (optional)
+│ └── app.html / app.ts
+
+yaml
+Copy code
+
+---
+
+## ⚙️ Installation & Setup
+
+1. **Clone this repository**
+
+   ```bash
+   git clone https://github.com/<your-username>/<repo-name>.git
+   cd <repo-name>
+Install dependencies
+
+bash
+Copy code
+npm install
+Run the application
+
+bash
+Copy code
 ng serve
-```
+Access it in your browser
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+arduino
+Copy code
+http://localhost:4200
+(Optional) Run it on a local network to test from other devices:
 
-## Code scaffolding
+bash
+Copy code
+ng serve --host 0.0.0.0
+🧠 Usage
+🔹 Creating an Order
+Go to the “Create” tab.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+Fill in all required fields:
 
-```bash
-ng generate component component-name
-```
+Name – Letters only
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Address – Required
 
-```bash
-ng generate --help
-```
+Email – Must be Gmail or Outlook
 
-## Building
+Description – Between 40 and 120 characters
 
-To build the project run:
+Click Create Order to register it.
+A confirmation modal will appear with the generated package number and identifier.
 
-```bash
-ng build
-```
+🔹 Updating an Order
+Go to the “Update” tab.
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Enter the Package Number and click Search.
 
-## Running unit tests
+Modify its status (e.g., “In preparation”, “In transit”, “Delivered”, etc.).
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+Add a comment (20–40 chars) and responsible person’s name.
 
-```bash
-ng test
-```
+Click Save Update to confirm.
+A modal will confirm the successful update.
 
-## Running end-to-end tests
+🧪 Validation Rules Summary
+Field	Validation	Example
+Name	Only letters and spaces	Juan Pérez
+Address	Required	Calle 10-45, Zona 12
+Email	Must be Gmail or Outlook	usuario@gmail.com
+Description	40–120 characters	Contains fragile glass items.
+Comment (update)	20–40 characters	Package prepared for delivery
 
-For end-to-end (e2e) testing, run:
+🖼️ Screenshots
+Create Order
 
-```bash
-ng e2e
-```
+Update Order
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+💡 Notes
+This app simulates data storage only in the client (no backend).
 
-## Additional Resources
+Designed for educational purposes under Programming Web – Practice #2 (2025).
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+All UI elements use Bootstrap 5 for layout and feedback.
+
+👨‍💻 Author
+Samuel Beteta
+Universidad Mesoamericana – Systems Engineering
+

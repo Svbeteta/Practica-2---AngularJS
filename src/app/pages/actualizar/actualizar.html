@@ -1,0 +1,162 @@
+<!-- 🔍 Buscar orden -->
+<div class="card shadow-sm mb-4">
+  <div class="card-header bg-primary text-white">Buscar orden</div>
+  <div class="card-body">
+    <form [formGroup]="searchForm" (ngSubmit)="onSearch()" class="row g-2" novalidate>
+      <div class="col-md-8">
+        <input
+          type="text"
+          class="form-control"
+          formControlName="packageNumber"
+          placeholder="ENV-2025-0001" />
+      </div>
+      <div class="col-md-4 d-grid">
+        <button class="btn btn-primary" type="submit">Buscar</button>
+      </div>
+    </form>
+    <div class="text-danger mt-2" *ngIf="errorMsg">{{ errorMsg }}</div>
+  </div>
+</div>
+
+<!-- 🧾 Detalle y actualización -->
+<div *ngIf="found" class="card shadow-sm">
+  <div class="card-header bg-light">
+    <strong>Orden:</strong> {{ found.packageNumber }} •
+    <strong>Estado actual:</strong> {{ current }}
+  </div>
+
+  <div class="card-body">
+    <!-- Info -->
+    <div class="row mb-3">
+      <div class="col-md-6">
+        <div class="form-text">Nombre del destinatario</div>
+        <div class="fw-semibold">{{ found.nombre }}</div>
+      </div>
+      <div class="col-md-6">
+        <div class="form-text">Dirección de destino</div>
+        <div class="fw-semibold">{{ found.direccion }}</div>
+      </div>
+    </div>
+
+    <!-- Formulario -->
+    <form [formGroup]="updateForm" (ngSubmit)="onUpdate()" novalidate>
+      <div class="row g-3">
+        <!-- Estado -->
+        <div class="col-md-4">
+          <label class="form-label">Siguiente estado</label>
+          <select class="form-select" formControlName="nextStatus" [disabled]="!nextList.length">
+            <option *ngIf="!nextList.length" [ngValue]="null">No hay más estados</option>
+            <option *ngFor="let s of nextList" [ngValue]="s">{{ s }}</option>
+          </select>
+          <div class="form-text">
+            Secuencia: Creado → En preparación → En tránsito → (Entregado | No entregado)
+          </div>
+        </div>
+
+        <!-- Responsable -->
+        <div class="col-md-4">
+          <label class="form-label" for="resp">Responsable</label>
+          <input
+            id="resp"
+            type="text"
+            class="form-control"
+            formControlName="responsable"
+            placeholder="Nombre y apellido"
+            autocomplete="off"
+            pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$" />
+          <div class="form-text">Solo letras y espacios.</div>
+
+          <!-- Feedback responsable -->
+          <div class="text-danger mt-1" *ngIf="uf.responsable.touched && uf.responsable.invalid">
+            <small *ngIf="uf.responsable.errors?.['required']">El responsable es obligatorio.</small>
+            <small *ngIf="uf.responsable.errors?.['pattern']">Solo letras y espacios.</small>
+          </div>
+        </div>
+
+        <!-- Comentario -->
+        <div class="col-md-12">
+          <label class="form-label" for="coment">Comentario (20–40)</label>
+          <input
+            id="coment"
+            type="text"
+            class="form-control"
+            formControlName="comentario"
+            [attr.maxlength]="maxComment"
+            placeholder="Debe tener entre 20 y 40 caracteres" />
+
+          <!-- Indicador dinámico -->
+          <div class="d-flex justify-content-between mt-1">
+            <small
+              [ngClass]="{
+                'text-danger': commentLen < minComment,
+                'text-success': commentLen >= minComment && commentLen < maxComment,
+                'text-warning': commentLen === maxComment
+              }"
+              aria-live="polite">
+              <ng-container *ngIf="commentLen < minComment">
+                Faltan {{ commentLeft }} caracteres ({{ commentLen }}/{{ maxComment }}).
+              </ng-container>
+              <ng-container *ngIf="commentLen >= minComment && commentLen < maxComment">
+                ¡Perfecto! {{ commentLen }}/{{ maxComment }}.
+              </ng-container>
+              <ng-container *ngIf="commentLen === maxComment">
+                Alcanzaste el máximo ({{ maxComment }}).
+              </ng-container>
+            </small>
+            <small class="text-muted">{{ commentLen }}/{{ maxComment }}</small>
+          </div>
+
+          <!-- Feedback comentario -->
+          <div class="text-danger mt-1" *ngIf="uf.comentario.touched && uf.comentario.invalid">
+            <small *ngIf="uf.comentario.errors?.['required']">El comentario es obligatorio.</small>
+            <small *ngIf="uf.comentario.errors?.['minlength']">Mínimo 20 caracteres.</small>
+            <small *ngIf="uf.comentario.errors?.['maxlength']">Máximo 40 caracteres.</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Botón -->
+      <div class="d-flex gap-2 mt-3">
+        <button class="btn btn-success" type="submit" [disabled]="!canSave">
+          Guardar actualización
+        </button>
+
+        <span class="text-danger" *ngIf="errorMsg">{{ errorMsg }}</span>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ✅ Modal de confirmación -->
+<div class="modal fade" id="updateModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title">Actualización realizada</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <p class="mb-1">Número de paquete:</p>
+        <h6 class="fw-semibold">{{ modalPkg }}</h6>
+
+        <p class="mb-1 mt-3">Estado:</p>
+        <div>
+          <span class="badge text-bg-secondary me-1">{{ modalFrom }}</span>
+          <span class="me-1">→</span>
+          <span class="badge text-bg-primary">{{ modalTo }}</span>
+        </div>
+
+        <p class="text-muted mt-3 mb-0">
+          La actualización se registró correctamente.
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>

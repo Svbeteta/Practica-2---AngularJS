@@ -1,0 +1,132 @@
+<!-- 🧾 Crear orden -->
+<div class="card shadow-sm">
+  <div class="card-header bg-primary text-white">Crear orden</div>
+
+  <div class="card-body">
+    <!-- 🔔 Alerta de requisitos faltantes -->
+    <div class="alert alert-danger" *ngIf="showAlert" role="alert" aria-live="polite">
+      <strong>Hace falta completar:</strong>
+      <ul class="mb-0">
+        <li *ngFor="let m of missingMessages">{{ m }}</li>
+      </ul>
+    </div>
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" novalidate class="row g-3">
+      <!-- Nombre -->
+      <div class="col-12">
+        <label class="form-label" for="nombre">Nombre del destinatario</label>
+        <input
+          id="nombre"
+          type="text"
+          class="form-control"
+          formControlName="nombre"
+          placeholder="Juan Pérez"
+          autocomplete="off" />
+        <div class="text-danger mt-1" *ngIf="f.nombre.touched && f.nombre.invalid">
+          <small *ngIf="f.nombre.errors?.['required']">El nombre es obligatorio.</small>
+          <small *ngIf="f.nombre.errors?.['onlyLetters']">Solo letras y espacios.</small>
+        </div>
+      </div>
+
+      <!-- Dirección -->
+      <div class="col-12">
+        <label class="form-label" for="direccion">Dirección de destino</label>
+        <input
+          id="direccion"
+          type="text"
+          class="form-control"
+          formControlName="direccion"
+          placeholder="Calle 1-23, Zona X" />
+        <div class="text-danger mt-1" *ngIf="f.direccion.touched && f.direccion.invalid">
+          <small *ngIf="f.direccion.errors?.['required']">La dirección es obligatoria.</small>
+        </div>
+      </div>
+
+      <!-- Email -->
+      <div class="col-12">
+        <label class="form-label" for="email">Email de contacto</label>
+        <input
+          id="email"
+          type="email"
+          class="form-control"
+          formControlName="email"
+          placeholder="usuario@gmail.com" />
+        <div class="form-text">Se permite <strong>gmail.com</strong> u <strong>outlook.com</strong>.</div>
+        <div class="text-danger mt-1" *ngIf="f.email.touched && f.email.invalid">
+          <small *ngIf="f.email.errors?.['required']">El email es obligatorio.</small>
+          <small *ngIf="f.email.errors?.['domain']">Debe ser gmail.com u outlook.com.</small>
+        </div>
+      </div>
+
+      <!-- Descripción -->
+      <div class="col-12">
+        <label class="form-label" for="desc">Descripción del paquete (40–120)</label>
+        <textarea
+          id="desc"
+          rows="3"
+          class="form-control"
+          formControlName="descripcion"
+          [attr.maxlength]="maxDesc"
+          placeholder="Describe el contenido (40 a 120 caracteres)"></textarea>
+
+        <!-- Indicador dinámico -->
+        <div class="d-flex justify-content-between mt-1">
+          <small
+            [ngClass]="{
+              'text-danger': descLen < minDesc,
+              'text-success': descLen >= minDesc && descLen < maxDesc,
+              'text-warning': descLen === maxDesc
+            }"
+            aria-live="polite">
+            <ng-container *ngIf="descLen < minDesc">
+              Faltan {{ descLeft }} caracteres ({{ descLen }}/{{ maxDesc }}).
+            </ng-container>
+            <ng-container *ngIf="descLen >= minDesc && descLen < maxDesc">
+              ¡Perfecto! {{ descLen }}/{{ maxDesc }}.
+            </ng-container>
+            <ng-container *ngIf="descLen === maxDesc">
+              Alcanzaste el máximo ({{ maxDesc }}).
+            </ng-container>
+          </small>
+          <small class="text-muted">{{ descLen }}/{{ maxDesc }}</small>
+        </div>
+
+        <div class="text-danger mt-1" *ngIf="f.descripcion.touched && f.descripcion.invalid">
+          <small *ngIf="f.descripcion.errors?.['required']">La descripción es obligatoria.</small>
+          <small *ngIf="f.descripcion.errors?.['lengthBetween']">Debe tener entre {{ minDesc }} y {{ maxDesc }} caracteres.</small>
+        </div>
+      </div>
+
+      <!-- Botón -->
+      <div class="col-12 d-grid">
+        <button class="btn btn-primary" type="submit" [disabled]="!canCreate">
+          Crear orden
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ✅ Modal de confirmación (ya existente en tu proyecto) -->
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-success text-white">
+        <h5 class="modal-title">Orden creada</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <p class="mb-1">Número de paquete:</p>
+        <h6 class="fw-semibold">{{ generatedPackage }}</h6>
+
+        <p class="mb-1 mt-3">Identificador:</p>
+        <h6 class="fw-semibold">{{ generatedId }}</h6>
+
+        <p class="text-muted mt-3 mb-0">La orden se registró correctamente.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Cerrar</button>
+      </div>
+    </div>
+  </div>
+</div>
