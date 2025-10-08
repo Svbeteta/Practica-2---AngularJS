@@ -111,12 +111,12 @@ Open **http://localhost:4200** in your browser.
 ## ✅ Validation Rules
 | Field                      | Rule                                   | Example                               |
 |---------------------------|----------------------------------------|---------------------------------------|
-| Nombre (Name)             | Letters and spaces only                | `Juan Pérez`                          |
+| Nombre (Name)             | Letters and spaces only                | `Jon Doe`                          |
 | Dirección (Address)       | Required                               | `Calle 10-45, Zona 12`                |
 | Email                     | Gmail or Outlook domains only          | `usuario@gmail.com`                   |
 | Descripción (Description) | 40–120 characters                      | `Contiene artículos frágiles.`        |
 | Comentario (Comment)      | 20–40 characters                       | `Paquete preparado para despacho.`    |
-| Responsable               | Letters and spaces only                | `María López`                         |
+| Responsable               | Letters and spaces only                | `Average Joe`                         |
 
 ---
 
