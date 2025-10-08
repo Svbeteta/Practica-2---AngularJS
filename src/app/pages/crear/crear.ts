@@ -1,13 +1,15 @@
 import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule, FormBuilder, Validators, AbstractControl, ValidationErrors } from '@angular/forms';
 import { OrdersService } from '../../core/orders';
-import { CommonModule } from '@angular/common';  
+import { CommonModule } from '@angular/common';
 
+/** Solo letras (incluye tildes y ñ) y espacios */
 function onlyLetters(control: AbstractControl): ValidationErrors | null {
   const v = (control.value ?? '').trim();
   return v && /^[A-Za-zÁÉÍÓÚáéíóúÑñ ]+$/.test(v) ? null : { onlyLetters: true };
 }
 
+/** Email únicamente de gmail.com u outlook.com */
 function gmailOrOutlook(control: AbstractControl): ValidationErrors | null {
   const v = (control.value ?? '').trim().toLowerCase();
   if (!v) return { required: true };
@@ -15,17 +17,24 @@ function gmailOrOutlook(control: AbstractControl): ValidationErrors | null {
   return ok ? null : { domain: true };
 }
 
+/**
+ * Valida longitud entre min y max IGNORANDO espacios en blanco.
+ * Cuenta solo caracteres no-espacio.
+ */
 function lengthBetween(min: number, max: number) {
   return (control: AbstractControl): ValidationErrors | null => {
-    const v = (control.value ?? '').trim();
-    return v.length >= min && v.length <= max ? null : { lengthBetween: { min, max } };
+    const raw = (control.value ?? '') as string;
+    const noSpacesLen = raw.replace(/\s+/g, '').length; // <-- ignora espacios
+    return noSpacesLen >= min && noSpacesLen <= max
+      ? null
+      : { lengthBetween: { min, max } };
   };
 }
 
 @Component({
   selector: 'app-crear',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule], 
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './crear.html',
   styleUrl: './crear.scss'
 })
@@ -54,9 +63,10 @@ export class Crear {
     return this.form.valid;
   }
 
-  // Contadores de descripción
+  // Contadores de descripción (IGNORAN espacios)
   get descLen(): number {
-    return ((this.form.value.descripcion ?? '') as string).trim().length;
+    const value = (this.form.value.descripcion ?? '') as string;
+    return value.replace(/\s+/g, '').length;
   }
   get descLeft(): number {
     return Math.max(this.minDesc - this.descLen, 0);
@@ -87,7 +97,7 @@ export class Crear {
     if (descripcion.errors) {
       if (descripcion.errors['required']) msgs.push('La descripción del paquete es obligatoria.');
       if (descripcion.errors['lengthBetween']) {
-        msgs.push(`La descripción debe tener entre ${this.minDesc} y ${this.maxDesc} caracteres.`);
+        msgs.push(`La descripción debe tener entre ${this.minDesc} y ${this.maxDesc} caracteres (sin contar espacios).`);
       }
     }
 
@@ -115,6 +125,7 @@ export class Crear {
       nombre: this.f.nombre.value!.trim(),
       direccion: this.f.direccion.value!.trim(),
       email: this.f.email.value!.trim(),
+      // Guardamos el texto tal cual lo escribió el usuario; si quieres limpiarlo, lo ajustamos.
       descripcion: this.f.descripcion.value!.trim(),
       historial: []
     });

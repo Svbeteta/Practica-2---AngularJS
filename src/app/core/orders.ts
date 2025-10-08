@@ -21,14 +21,14 @@ export interface Order {
 export class OrdersService {
   private orders: Order[] = [];
 
-  /** Transiciones válidas según el diagrama */
   private transitions: Record<OrderStatus, OrderStatus[]> = {
-    'Creado': ['En preparación'],
-    'En preparación': ['En tránsito'],
-    'En tránsito': ['Entregado', 'No entregado'],
-    'Entregado': [],
-    'No entregado': []
-  };
+  'Creado': ['En preparación'],
+  'En preparación': ['En tránsito', 'No entregado'], 
+  'En tránsito': ['Entregado', 'No entregado'],
+  'Entregado': [],
+  'No entregado': []
+};
+
 
   getAll(): Order[] {
     return this.orders;

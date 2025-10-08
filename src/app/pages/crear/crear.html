@@ -20,7 +20,7 @@
           type="text"
           class="form-control"
           formControlName="nombre"
-          placeholder="Juan Pérez"
+          placeholder="Jon Doe"
           autocomplete="off" />
         <div class="text-danger mt-1" *ngIf="f.nombre.touched && f.nombre.invalid">
           <small *ngIf="f.nombre.errors?.['required']">El nombre es obligatorio.</small>
@@ -36,7 +36,7 @@
           type="text"
           class="form-control"
           formControlName="direccion"
-          placeholder="Calle 1-23, Zona X" />
+          placeholder="Calle 1-23, Zona XX, Guatemala" />
         <div class="text-danger mt-1" *ngIf="f.direccion.touched && f.direccion.invalid">
           <small *ngIf="f.direccion.errors?.['required']">La dirección es obligatoria.</small>
         </div>
@@ -60,14 +60,14 @@
 
       <!-- Descripción -->
       <div class="col-12">
-        <label class="form-label" for="desc">Descripción del paquete (40–120)</label>
+        <label class="form-label" for="desc">Descripción del paquete (40–120, sin contar espacios)</label>
         <textarea
           id="desc"
           rows="3"
           class="form-control"
           formControlName="descripcion"
           [attr.maxlength]="maxDesc"
-          placeholder="Describe el contenido (40 a 120 caracteres)"></textarea>
+          placeholder="Describe el contenido del paquete."></textarea>
 
         <!-- Indicador dinámico -->
         <div class="d-flex justify-content-between mt-1">
@@ -93,7 +93,7 @@
 
         <div class="text-danger mt-1" *ngIf="f.descripcion.touched && f.descripcion.invalid">
           <small *ngIf="f.descripcion.errors?.['required']">La descripción es obligatoria.</small>
-          <small *ngIf="f.descripcion.errors?.['lengthBetween']">Debe tener entre {{ minDesc }} y {{ maxDesc }} caracteres.</small>
+          <small *ngIf="f.descripcion.errors?.['lengthBetween']">Debe tener entre {{ minDesc }} y {{ maxDesc }} caracteres (sin contar espacios).</small>
         </div>
       </div>
 
